@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"reflect"
 	"sync"
+
+	"github.com/pyos/webmcast/broadcast"
 )
 
 type sqlDAO struct {
@@ -418,7 +420,7 @@ func (d *sqlDAO) loadPanelsFromRows(rows *sql.Rows) ([]StreamMetadataPanel, erro
 	return r, rows.Err()
 }
 
-func (d *sqlDAO) SetStreamTrackInfo(id string, info *StreamTrackInfo) error {
+func (d *sqlDAO) SetStreamTrackInfo(id string, info *broadcast.StreamTrackInfo) error {
 	return errOf(d.prepared.SetStreamTracks.Exec(info.HasVideo, info.HasAudio, info.Width, info.Height, id))
 }
 

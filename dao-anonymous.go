@@ -1,6 +1,10 @@
 package main
 
-import "sync"
+import (
+	"sync"
+
+	"github.com/pyos/webmcast/broadcast"
+)
 
 type anonymousDAO struct {
 	active map[string]*StreamMetadata
@@ -66,7 +70,7 @@ func (d anonymousDAO) DelStreamPanel(id int64, n int64) error {
 func (d anonymousDAO) StartStream(id string, token string) error {
 	d.Lock()
 	if _, ok := d.active[id]; !ok {
-		d.active[id] = &StreamMetadata{StreamTrackInfo: StreamTrackInfo{HasVideo: true, HasAudio: true}}
+		d.active[id] = &StreamMetadata{StreamTrackInfo: broadcast.StreamTrackInfo{HasVideo: true, HasAudio: true}}
 	}
 	d.Unlock()
 	return nil
@@ -99,7 +103,7 @@ func (d anonymousDAO) GetStreamMetadata(id string) (*StreamMetadata, error) {
 	return nil, ErrStreamNotExist
 }
 
-func (d anonymousDAO) SetStreamTrackInfo(id string, info *StreamTrackInfo) error {
+func (d anonymousDAO) SetStreamTrackInfo(id string, info *broadcast.StreamTrackInfo) error {
 	d.RLock()
 	if item, ok := d.active[id]; ok {
 		item.StreamTrackInfo = *info

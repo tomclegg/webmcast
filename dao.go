@@ -5,10 +5,12 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"golang.org/x/crypto/bcrypt"
 	"math/rand"
 	"strings"
 	"time"
+
+	"github.com/pyos/webmcast/broadcast"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var (
@@ -59,20 +61,13 @@ type StreamMetadata struct {
 	OwnerID   int64
 	NSFW      bool
 	Panels    []StreamMetadataPanel
-	StreamTrackInfo
+	broadcast.StreamTrackInfo
 }
 
 type StreamMetadataPanel struct {
 	Text    string
 	Image   string
 	Created time.Time
-}
-
-type StreamTrackInfo struct {
-	HasVideo bool
-	HasAudio bool
-	Width    uint // Dimensions of the video track that came last in the `Tracks` tag.
-	Height   uint // Hopefully, there's only one video track in the file.
 }
 
 type FileSize int64
@@ -182,7 +177,7 @@ type Database interface {
 	StopStream(id string) error
 	GetStreamServer(id string) (string, error)
 	GetStreamMetadata(id string) (*StreamMetadata, error)
-	SetStreamTrackInfo(id string, info *StreamTrackInfo) error
+	SetStreamTrackInfo(id string, info *broadcast.StreamTrackInfo) error
 	GetRecordings(id string) (*StreamHistory, error)
 	GetRecording(id string, recid int64) (*StreamRecording, error)
 	// TODO allow removing old recordings

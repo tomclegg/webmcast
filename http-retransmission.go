@@ -33,15 +33,17 @@
 package main
 
 import (
-	"golang.org/x/net/websocket"
 	"log"
 	"net/http"
 	"strings"
 	"sync"
+
+	"github.com/pyos/webmcast/broadcast"
+	"golang.org/x/net/websocket"
 )
 
 type RetransmissionHandler struct {
-	BroadcastSet
+	broadcast.BroadcastSet
 	chatLock sync.Mutex
 	chats    map[string]*Chat
 	*Context
@@ -61,7 +63,7 @@ func NewRetransmissionHandler(c *Context) *RetransmissionHandler {
 			log.Println("Error stopping the stream: ", err)
 		}
 	}
-	ctx.OnStreamTrackInfo = func(id string, info *StreamTrackInfo) {
+	ctx.OnStreamTrackInfo = func(id string, info *broadcast.StreamTrackInfo) {
 		if err := ctx.SetStreamTrackInfo(id, info); err != nil {
 			log.Println("Error setting stream metadata: ", err)
 		}

@@ -1,4 +1,4 @@
-package main
+package broadcast
 
 import (
 	"errors"
@@ -212,6 +212,13 @@ func (cb *viewer) WriteFrame(cluster []byte, forceCluster bool, packed frame) {
 			cb.seenKeyframes &= ^trackMask
 		}
 	}
+}
+
+type StreamTrackInfo struct {
+	HasVideo bool
+	HasAudio bool
+	Width    uint // Dimensions of the video track that came last in the `Tracks` tag.
+	Height   uint // Hopefully, there's only one video track in the file.
 }
 
 type BroadcastSet struct {
